@@ -12,7 +12,9 @@ public class PorterStemStopWordAnalyzer extends Analyzer {
     public TokenStream tokenStream(String fieldName, Reader reader) {
         Tokenizer tokenizer = new StandardTokenizer(reader);
         TokenFilter lowerCaseFilter = new LowerCaseFilter(tokenizer);
-        TokenFilter stopFilter = new StopFilter(lowerCaseFilter,stopWords);
+        TokenFilter stopFilter = new StopFilter(lowerCaseFilter, EnglishStopWords.SMART_STOP_WORDS);
+//        TokenFilter stopFilter = new StopFilter(lowerCaseFilter, stopWords);
+        // put something in here that stems collective as collective
         TokenFilter stemFilter =  new PorterStemFilter(stopFilter);
         return stemFilter;
     } 

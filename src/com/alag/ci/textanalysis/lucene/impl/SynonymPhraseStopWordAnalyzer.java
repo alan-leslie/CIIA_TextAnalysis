@@ -22,10 +22,18 @@ public class SynonymPhraseStopWordAnalyzer extends Analyzer{
     public TokenStream tokenStream(String fieldName, Reader reader) {
         Tokenizer tokenizer = new StandardTokenizer(reader);
         TokenFilter lowerCaseFilter = new LowerCaseFilter(tokenizer);
-        TokenFilter stopFilter = new StopFilter(lowerCaseFilter,
-                PorterStemStopWordAnalyzer.stopWords);
-        return new SynonymPhraseStopWordFilter(stopFilter,
+//        TokenFilter stopFilter = new StopFilter(lowerCaseFilter,
+//                PorterStemStopWordAnalyzer.stopWords);
+        
+        // todo there must be a stemmer about here seomwhere???
+        // also might want to move phrase filter above stop fiter
+        // so I can add phrases like "collective intelligence in action"
+        // so that the in does not get stripped out
+        TokenFilter phraseFilter = new SynonymPhraseStopWordFilter(lowerCaseFilter,
                 this.synonymsCache, this.phrasesCache);
+//        TokenFilter stopFilter = new StopFilter(lowerCaseFilter,
+//                EnglishStopWords.SMART_STOP_WORDS);
+        return phraseFilter;
     }
     
     public static final void main(String [] args) throws IOException {
