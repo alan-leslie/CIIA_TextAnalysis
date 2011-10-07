@@ -16,6 +16,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
@@ -24,13 +25,17 @@ import org.apache.lucene.store.FSDirectory;
 import junit.framework.TestCase;
 
 public class LuceneIntegrationTest extends TestCase {
-    private static final String INDEX_DIR = "c:\\Lucene\\index";
-    private static final String DATA_DIR = "c:\\Lucene\\data";
+    private static final String INDEX_DIR = "/home/al/Lucene/index";
+    private static final String DATA_DIR = "/home/al/Lucene/data";
     
     public void testLuceneAnalyzers() throws Exception {
         String text = "This is dummy text";
         System.out.println("Displaying ... ");
         displayTokens(new StandardAnalyzer(),text);
+        List<Token> tokenList = tokensFromAnalysis(new StandardAnalyzer(), text);
+        assert(tokenList.size() == 2);
+        assert(tokenList.get(0).termText().equalsIgnoreCase("dummy"));
+        assert(tokenList.get(1).termText().equalsIgnoreCase("text"));
     }
     
     private static List<Token> tokensFromAnalysis(Analyzer analyzer, String text) 
@@ -73,6 +78,7 @@ public class LuceneIntegrationTest extends TestCase {
             
             int numIndexed = writer.docCount();
             System.out.println("numIndexed=" + numIndexed);
+            assert(numIndexed == 13);
             writer.optimize();
             writer.close();
             
@@ -81,8 +87,12 @@ public class LuceneIntegrationTest extends TestCase {
             Directory dir = FSDirectory.getDirectory(indexDir, false);
             IndexSearcher is = new IndexSearcher(dir);
             
-         //   Query query = QueryParser.parse(q,"contents", new StandardAnalyzer());
-            
+            QueryParser theParser = new QueryParser("content", new StandardAnalyzer());       
+            Query query = theParser.parse(q);
+            Hits search = is.search(query);
+            int noOfHits = search.length();
+            System.out.println("no of hits:" + Integer.toString(noOfHits));  
+            assert(noOfHits == 1);
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
