@@ -5,6 +5,8 @@ import java.util.*;
 
 import com.alag.ci.textanalysis.PhrasesCache;
 
+// TODO - use CSV file to get phrases
+
 public class PhrasesCacheImpl extends CacheImpl implements PhrasesCache {
     private Map<String,String> validPhrases = null;
     

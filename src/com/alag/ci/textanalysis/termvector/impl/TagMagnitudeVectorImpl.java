@@ -103,9 +103,11 @@ public class TagMagnitudeVectorImpl implements TagMagnitudeVector {
 
     public TagMagnitudeVector add(Collection<TagMagnitudeVector> tmList) {
         Map<Tag, Double> uniqueTags = new HashMap<Tag, Double>();
+        if(tagMagnitudesMap != null){
         for (TagMagnitude tagMagnitude : this.tagMagnitudesMap.values()) {
             uniqueTags.put(tagMagnitude.getTag(),
                     new Double(tagMagnitude.getMagnitudeSqd()));
+        }
         }
         for (TagMagnitudeVector tmv : tmList) {
             Map<Tag, TagMagnitude> tagMap = tmv.getTagMagnitudeMap();

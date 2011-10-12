@@ -5,6 +5,8 @@ import java.util.*;
 
 import com.alag.ci.textanalysis.SynonymsCache;
 
+// TODO - use CSV file to get phrases
+
 public class SynonymsCacheImpl extends CacheImpl implements SynonymsCache {
     private Map<String,List<String>> synonyms = null;
     
