@@ -1,33 +1,41 @@
 package com.alag.ci.textanalysis.lucene.impl;
 
+import com.alag.ci.CSVFile;
 import java.io.IOException;
 import java.util.*;
 
 import com.alag.ci.textanalysis.PhrasesCache;
 
-// TODO - use CSV file to get phrases
-
 public class PhrasesCacheImpl extends CacheImpl implements PhrasesCache {
-    private Map<String,String> validPhrases = null;
+    private Set<String> validPhrases = null;
     
     public PhrasesCacheImpl() throws IOException {
-        validPhrases = new HashMap<String,String>();
-        validPhrases.put("collective intelligence in action", null);
-        validPhrases.put("north atlantic treaty organisation", null);
-        validPhrases.put("north atlantic treaty organization", null);
-        validPhrases.put("google maps", null);
-        validPhrases.put("google map", null);
-//        validPhrases.put(getStemmedText("collective intelligence"), null);
+        initCache();
+    }
+    
+    private void initCache() {
+        String phrasesFileName = "phrases.txt";
+        validPhrases = new HashSet<String>();
+        
+        List<String[]> theFileData = CSVFile.getFileData(phrasesFileName);
+        Iterator<String[]> theIterator = theFileData.iterator();
+
+        while (theIterator.hasNext()) {
+            String theLineArr[] = theIterator.next();
+
+            if (theLineArr.length > 0) {
+                String thePhrase = theLineArr[0].trim();
+                validPhrases.add(thePhrase);
+            }
+        }
     }
     
     public boolean isValidPhrase(String text) throws IOException {
-//        return this.validPhrases.containsKey(getStemmedText(text));
-        return this.validPhrases.containsKey(text);
+        return this.validPhrases.contains(text);
     }
     
     public boolean isStartOfPhrase(String text) throws IOException {
-        Set<String> theKeys = validPhrases.keySet();
-        Iterator<String> iterator = theKeys.iterator();
+        Iterator<String> iterator = validPhrases.iterator();
         boolean found = false;
         
         while(iterator.hasNext() && !found){

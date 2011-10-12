@@ -20,7 +20,7 @@ public class CSVFile {
         List<String[]> retVal = new ArrayList<String[]>();
 
         try {
-            theReader = new FileReader("body_filter.txt");
+            theReader = new FileReader(fileName);
             BufferedReader in = new BufferedReader(theReader);
             
             String theLine = null;
