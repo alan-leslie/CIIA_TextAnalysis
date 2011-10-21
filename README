@@ -1,0 +1,14 @@
+Java program to analyse text (in the first instance from bookmarks)
+
+Using code from the books:
+collective intelligence in action - ISBN: 1933988312
+
+Adapted to only inject phrases and synonyms (from config files) once.
+The original code would inject the phrase, all of its components and all of the synonyms.
+So for example 'Collective Intelligence in Action' would inject the phrase, the words Collective, Intelligence, in and Action and 
+the synonym ciia.
+I also want to avoid stemming/stop word removal too early othrwise the phrase, 'Collective Intelligence in Action' could
+match with 'Collects Intelligence for Action'.
+That should help in maximising the signal to noise ratio for clustering/classification. 
+
+Note: built with netbeans.
