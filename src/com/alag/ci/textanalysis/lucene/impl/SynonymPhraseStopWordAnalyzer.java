@@ -8,8 +8,10 @@ import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 
 import com.alag.ci.textanalysis.*;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.Version;
 
-public class SynonymPhraseStopWordAnalyzer extends Analyzer{
+public final class SynonymPhraseStopWordAnalyzer extends Analyzer{
     private  SynonymsCache synonymsCache = null;
     private PhrasesCache phrasesCache = null;
     
@@ -18,9 +20,16 @@ public class SynonymPhraseStopWordAnalyzer extends Analyzer{
         this.synonymsCache = synonymsCache;
         this.phrasesCache = phrasesCache;
     }
+
+//    @Override
+//    public final TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
+//        return super.reusableTokenStream(fieldName, reader);
+//    }
     
     public TokenStream tokenStream(String fieldName, Reader reader) {
-        Tokenizer tokenizer = new StandardTokenizer(reader);
+                WhitespaceTokenizer tokenizer = new WhitespaceTokenizer(Version.LUCENE_34, reader);
+
+//        Tokenizer tokenizer = new StandardTokenizer(reader);
         TokenFilter lowerCaseFilter = new LowerCaseFilter(tokenizer);
 //        TokenFilter stopFilter = new StopFilter(lowerCaseFilter,
 //                PorterStemStopWordAnalyzer.stopWords);
@@ -41,14 +50,20 @@ public class SynonymPhraseStopWordAnalyzer extends Analyzer{
         PhrasesCache phrasesCache = new PhrasesCacheImpl();
         Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
                 synonymsCache,phrasesCache);
-        String text = "Collective Intelligence and Web2.0";
+        String text = "Collective Intelligence agency and Web2.0";
         Reader reader = new StringReader(text);
-        TokenStream ts = analyzer.tokenStream(null, reader);
-        Token token = ts.next();
-        while (token != null) {
-            System.out.println(token.termText());
-            token = ts.next();
+        TokenStream tokenStream = analyzer.tokenStream(null, reader);
+        CharTermAttribute termAttr = tokenStream.addAttribute(CharTermAttribute.class);
+        tokenStream.reset();
+        while (tokenStream.incrementToken()) {
+            String theTerm = termAttr.toString();
+            System.out.println(theTerm);
         }
+//        Token token = ts.next();
+//        while (token != null) {
+//            System.out.println(token.termText());
+//            token = ts.next();
+//        }
         
     }
 }

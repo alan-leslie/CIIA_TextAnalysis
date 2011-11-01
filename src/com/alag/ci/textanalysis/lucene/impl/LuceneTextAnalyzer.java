@@ -13,8 +13,9 @@ import com.alag.ci.tagcloud.impl.TagCloudElementImpl;
 import com.alag.ci.tagcloud.impl.TagCloudImpl;
 import com.alag.ci.textanalysis.*;
 import com.alag.ci.textanalysis.termvector.impl.*;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
-public class LuceneTextAnalyzer implements TextAnalyzer {
+public final class LuceneTextAnalyzer implements TextAnalyzer {
     private TagCache tagCache = null;
     private InverseDocFreqEstimator inverseDocFreqEstimator = null;
     
@@ -29,12 +30,21 @@ public class LuceneTextAnalyzer implements TextAnalyzer {
         Analyzer analyzer = getAnalyzer();
         List<Tag> tags = new ArrayList<Tag>();
         TokenStream tokenStream = analyzer.tokenStream(null, reader) ;
-        Token token = tokenStream.next();
-        while ( token != null) {
-            Tag tag = getTag(token.termText());
+//        Token token = tokenStream.next();
+//        while ( token != null) {
+//            Tag tag = getTag(token.termText());
+//            tags.add(tag);
+//            token = tokenStream.next();
+//        }
+        
+        CharTermAttribute termAttr = tokenStream.addAttribute(CharTermAttribute.class);
+        tokenStream.reset();
+        while (tokenStream.incrementToken()) {
+            String theTerm = termAttr.toString();
+            Tag tag = getTag(theTerm);
             tags.add(tag);
-            token = tokenStream.next();
         }
+        
         return tags;
     }
     

@@ -33,4 +33,9 @@ public class InverseDocFreqEstimatorImpl implements InverseDocFreqEstimator {
         this.tagFreq.put(tag, count);
     }
 
+    @Override
+    public int noOfTags() {
+        return tagFreq.size();
+    }
+
 }
