@@ -7,7 +7,6 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
 
 import com.alag.ci.textanalysis.PhrasesCache;
@@ -37,12 +36,7 @@ public class SynonymsPhrasesAnalyzerTest extends TestCase {
             System.out.println(theTerm);
             ++noOfTokens;
         }
-        System.out.println("Start of op");
-//        Token token = ts.next();
-//        while (token != null) {
-//            System.out.println(token.termText());
-//            token = ts.next();
-//        }
+        System.out.println("End of op");
     }
 
     public void testPorterStemmingAnalyzer() throws IOException {
@@ -59,11 +53,6 @@ public class SynonymsPhrasesAnalyzerTest extends TestCase {
             System.out.println(theTerm);
             ++noOfTokens;
         }
-        System.out.println("Start of op");
-//        Token token = ts.next();
-//        while (token != null) {
-//        //    System.out.println(token.termText());
-//            token = ts.next();
-//        }
+        System.out.println("End of op");
     }
 }

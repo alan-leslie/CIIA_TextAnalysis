@@ -102,17 +102,9 @@ public class SynonymPhraseStopWordAnalyzerTest {
                 System.out.println(theTerm);
                 ++noOfTokens;
             }
-//            Token token = ts.next();
-//            Token firstToken = token;
-//            int noOfTokens = 1;
-//            while (token != null) {
-//                System.out.println(token.termText());
-//                ++noOfTokens;
-//                token = ts.next();
-//            }
 
             assert (firstToken.equalsIgnoreCase("collective"));
-            assert (noOfTokens == 3);  // including the end null
+            assert (noOfTokens == 3); 
         } catch (IOException ex) {
             Logger.getLogger(SynonymPhraseStopWordAnalyzerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -141,18 +133,10 @@ public class SynonymPhraseStopWordAnalyzerTest {
                 System.out.println(theTerm);
                 ++noOfTokens;
             }
-            System.out.println("Start of op");
-//            Token token = ts.next();
-//            Token firstToken = token;
-//            int noOfTokens = 1;
-//            while (token != null) {
-//                System.out.println(token.termText());
-//                ++noOfTokens;
-//                token = ts.next();
-//            }
+            System.out.println("End of op");
 
             assert (firstToken.equalsIgnoreCase("javascript"));
-            assert (noOfTokens == 2);  // including the end null
+            assert (noOfTokens == 2); 
         } catch (IOException ex) {
             Logger.getLogger(SynonymPhraseStopWordAnalyzerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -181,18 +165,10 @@ public class SynonymPhraseStopWordAnalyzerTest {
                 System.out.println(theTerm);
                 ++noOfTokens;
             }
-            System.out.println("Start of op");
-//            Token token = ts.next();
-//            Token firstToken = token;
-//            int noOfTokens = 1;
-//            while (token != null) {
-//                System.out.println(token.termText());
-//                ++noOfTokens;
-//                token = ts.next();
-//            }
+            System.out.println("End of op");
 
             assert (firstToken.equalsIgnoreCase("nato"));
-            assert (noOfTokens == 2);  // including the end null
+            assert (noOfTokens == 2);  
         } catch (IOException ex) {
             Logger.getLogger(SynonymPhraseStopWordAnalyzerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -236,33 +212,8 @@ public class SynonymPhraseStopWordAnalyzerTest {
                 System.out.println(theTerm);
                 ++noOfTokens;
             }
-//            Token token = ts.next();
-//            Token firstToken = token;
-//            Token secondToken = token;
-//            Token thirdToken = token;
-//            Token fourthToken = token;
-//            Token fifthToken = token;
-//            int noOfTokens = 1;
-//            while (token != null) {
-//                System.out.println(token.termText());
-//                ++noOfTokens;
-//                token = ts.next();
-//                if (noOfTokens == 2) {
-//                    secondToken = token;
-//                }
-//                if (noOfTokens == 3) {
-//                    thirdToken = token;
-//                }
-//                if (noOfTokens == 4) {
-//                    fourthToken = token;
-//                }
-//                if (noOfTokens == 5) {
-//                    fifthToken = token;
-//                }
 
-//            }
-
-            assert (noOfTokens == 5);  // including the end null
+            assert (noOfTokens == 5);  
             assert (firstToken.equalsIgnoreCase("north"));
             assert (secondToken.equalsIgnoreCase("google maps"));
             assert (thirdToken.equalsIgnoreCase("collective"));
