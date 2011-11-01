@@ -4,27 +4,27 @@ package com.alag.ci;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author al
  */
-public class CSVFile {
-    public static List<String[]> getFileData(String fileName) {
+public class TextFile {
+    public static String getFileData(String fileName) {
         FileReader theReader = null;
-        List<String[]> retVal = new ArrayList<String[]>();
+        StringBuilder theTextBuilder = new StringBuilder();
 
         try {
             theReader = new FileReader(fileName);
             BufferedReader in = new BufferedReader(theReader);
             
-            String theLine = null;
-            
-            while ((theLine = in.readLine()) != null) {
-                String theLineArr[] = theLine.split(",");
-                retVal.add(theLineArr);
+            String str;
+            while ((str = in.readLine()) != null) {
+                theTextBuilder.append(str);
+                // for some cases (see test kasteel) lucene is not seeing
+                // different lines as being separated so jions the words on 
+                // different lines - force it to see white space
+                theTextBuilder.append(" ");
             }
         } catch (IOException e) {
             // ...
@@ -38,6 +38,6 @@ public class CSVFile {
             }
         }
         
-        return retVal;
+        return theTextBuilder.toString();
     }    
 }

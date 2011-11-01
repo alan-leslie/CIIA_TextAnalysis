@@ -1,9 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.alag.ci.textanalysis.lucene.impl;
 
+import com.alag.ci.TextFile;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import com.alag.ci.textanalysis.SynonymsCache;
 import com.alag.ci.textanalysis.PhrasesCache;
@@ -12,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import java.io.StringReader;
-import org.apache.lucene.analysis.Token;
 import java.io.Reader;
 import org.apache.lucene.analysis.TokenStream;
 import org.junit.After;
@@ -79,13 +76,46 @@ public class SynonymPhraseStopWordAnalyzerTest {
             Logger.getLogger(SynonymPhraseStopWordAnalyzerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+   /**
+     * Test of main method, of class SynonymPhraseStopWordAnalyzer.
+     */
+    @Test
+    public final void testEmbeddedValidPhrase() {
+        try {
+            SynonymsCache synonymsCache = new SynonymsCacheImpl();
+            PhrasesCache phrasesCache = new PhrasesCacheImpl();
+            Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
+                    synonymsCache, phrasesCache);
+            String text = "the Collective Intelligence agency has action";
+            Reader reader = new StringReader(text);
+            TokenStream ts = analyzer.tokenStream(null, reader);
+            CharTermAttribute termAttr = ts.addAttribute(CharTermAttribute.class);
+            ts.reset();
+            int noOfTokens = 0;
+            String secondToken = "";
+            while (ts.incrementToken()) {
+                String theTerm = termAttr.toString();
+                if (noOfTokens == 1) {
+                    secondToken = theTerm;
+                }
+                System.out.println(theTerm);
+                ++noOfTokens;
+            }
 
+            assert (secondToken.equalsIgnoreCase("intelligence agency"));
+            assert (noOfTokens == 3);  
+        } catch (IOException ex) {
+            Logger.getLogger(SynonymPhraseStopWordAnalyzerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @Test
     public final void testNotAPhrase() {
         try {
             SynonymsCache synonymsCache = new SynonymsCacheImpl();
             PhrasesCache phrasesCache = new PhrasesCacheImpl();
-            final Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
+            Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
                     synonymsCache, phrasesCache);
             String text = "Collective Intelligence is action";
             Reader reader = new StringReader(text);
@@ -115,7 +145,7 @@ public class SynonymPhraseStopWordAnalyzerTest {
         try {
             SynonymsCache synonymsCache = new SynonymsCacheImpl();
             PhrasesCache phrasesCache = new PhrasesCacheImpl();
-            final Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
+            Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
                     synonymsCache, phrasesCache);
             String text = "js is javascript so it is";
             Reader reader = new StringReader(text);
@@ -147,7 +177,7 @@ public class SynonymPhraseStopWordAnalyzerTest {
         try {
             SynonymsCache synonymsCache = new SynonymsCacheImpl();
             PhrasesCache phrasesCache = new PhrasesCacheImpl();
-            final Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
+            Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
                     synonymsCache, phrasesCache);
             String text = "north atlantic treaty organisation is nato";
             Reader reader = new StringReader(text);
@@ -179,7 +209,7 @@ public class SynonymPhraseStopWordAnalyzerTest {
         try {
             SynonymsCache synonymsCache = new SynonymsCacheImpl();
             PhrasesCache phrasesCache = new PhrasesCacheImpl();
-            final Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
+            Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
                     synonymsCache, phrasesCache);
             String text = "north of the google maps is collective google map test";
             Reader reader = new StringReader(text);
@@ -222,5 +252,70 @@ public class SynonymPhraseStopWordAnalyzerTest {
         } catch (IOException ex) {
             Logger.getLogger(SynonymPhraseStopWordAnalyzerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @Test
+    public void testKasteelFile() {    
+        try{
+            String fullTxtFileName = "5.txt";
+            String theText = TextFile.getFileData(fullTxtFileName);     
+            SynonymsCache synonymsCache = new SynonymsCacheImpl();
+            PhrasesCache phrasesCache = new PhrasesCacheImpl();
+            Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
+                    synonymsCache, phrasesCache);
+            Reader reader = new StringReader(theText);
+            TokenStream ts = analyzer.tokenStream(null, reader);
+            CharTermAttribute termAttr = ts.addAttribute(CharTermAttribute.class);
+            ts.reset();
+            int noOfTokens = 0;
+            String secondToken = "";
+            System.out.println("Start of op");
+            while (ts.incrementToken()) {
+                String theTerm = termAttr.toString();
+                if (noOfTokens == 1) {
+                    secondToken = theTerm;
+                }
+                System.out.println(theTerm);
+                ++noOfTokens;
+            }
+            System.out.println("End of op");
+            
+            assert (noOfTokens == 6);  
+            assert (secondToken.equalsIgnoreCase("kasteel"));
+        } catch(Exception exc) {
+            assert(false);           
+        } 
+    }
+    
+   @Test
+    public void testContainsWalkthroughFile() {    
+        try{
+            String fullTxtFileName = "45.txt";
+            String theText = TextFile.getFileData(fullTxtFileName);     
+            SynonymsCache synonymsCache = new SynonymsCacheImpl();
+            PhrasesCache phrasesCache = new PhrasesCacheImpl();
+            Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
+                    synonymsCache, phrasesCache);
+            Reader reader = new StringReader(theText);
+            TokenStream ts = analyzer.tokenStream(null, reader);
+            CharTermAttribute termAttr = ts.addAttribute(CharTermAttribute.class);
+            ts.reset();
+            int noOfTokens = 0;
+            boolean tokenFound = false;
+            System.out.println("Start of op");
+            while (ts.incrementToken()) {
+                String theTerm = termAttr.toString();
+                if (theTerm.equalsIgnoreCase("walkthrough")){
+                    tokenFound = true;
+                }
+                System.out.println(theTerm);
+                ++noOfTokens;
+            }
+            System.out.println("End of op");
+            
+            assert (tokenFound);  
+        } catch(Exception exc) {
+            assert(false);           
+        } 
     }
 }

@@ -1,0 +1,28 @@
+
+ More Google Code University resource links
+ Google: HTML, CSS, and Javascript from the Ground Up
+ Are you looking for a basic understanding of how UIs are created on the web or who
+ wants to brush up outdated UI development knowledge? Or maybe you'd like to learn more
+ about the medium you're designing for and gain basic tools for prototyping designs? Do
+ you want a better understanding of the web and how Google makes the pages that are its
+ face to the world? If so, "HTML, CSS, and JavaScript from the Ground Up" is for you.
+ Table of Contents
+ Introduction
+ HTML
+ CSS
+ JavaScript
+ Note: Here are the lesson exercises supporting files
+Introduction
+HTML
+HTML Presentation
+HTML Exercise
+CSS
+CSS Presentation
+CSS Walkthrough
+CSS Exercise
+JavaScript
+JavaScript Presentation
+JavaScript Exercise
+ Except as otherwise noted ,
+ the content of this page is licensed under the Creative Commons
+ 

@@ -78,7 +78,7 @@ public final class SynonymPhraseStopWordFilter extends TokenFilter {
             hasNext = input.incrementToken();
 
             if (hasNext) {
-                String theTerm = termAtt.toString();
+                String theTerm = trimPunctuation(termAtt.toString());
                 phraseStartQueue.add(theTerm);
             }
         } else {
@@ -96,7 +96,7 @@ public final class SynonymPhraseStopWordFilter extends TokenFilter {
             hasNext = input.incrementToken();
 
             if (hasNext) {
-                String theTerm = termAtt.toString();
+                String theTerm = trimPunctuation(termAtt.toString());
                 phraseStartQueue.add(theTerm);
             }
 
@@ -128,6 +128,9 @@ public final class SynonymPhraseStopWordFilter extends TokenFilter {
     }
 
     private String getStemmedText(String text) throws IOException {
+        if(text.equalsIgnoreCase(",")){
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         Reader reader = new StringReader(text);
         TokenStream tokenStream = this.stemmer.tokenStream(null, reader);
@@ -162,5 +165,22 @@ public final class SynonymPhraseStopWordFilter extends TokenFilter {
         testPhrase.append(token);
 
         return testPhrase.toString().trim();
+    }
+    
+    private static String trimPunctuation(String theTerm){
+        String retVal = theTerm;
+        boolean endsWithPunctuation = (theTerm.endsWith("?") || 
+                theTerm.endsWith(",") ||
+                theTerm.endsWith("\"") ||
+                theTerm.endsWith(";") ||                
+                theTerm.endsWith(".") ||
+                theTerm.endsWith(":"));
+        
+        if( endsWithPunctuation && 
+                theTerm.length() > 1){
+            retVal = theTerm.substring(0, theTerm.length() - 1);     
+        }
+        
+        return retVal;
     }
 }
