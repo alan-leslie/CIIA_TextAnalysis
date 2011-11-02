@@ -290,7 +290,7 @@ public class SynonymPhraseStopWordAnalyzerTest {
             PhrasesCache phrasesCache = new PhrasesCacheImpl();
             Analyzer analyzer = new SynonymPhraseStopWordAnalyzer(
                     synonymsCache, phrasesCache);
-            String text = "\"html, google: action:; N.A.T.O.";
+            String text = "\"html, google: action:; N.A.T.O. 5.";
             Reader reader = new StringReader(text);
             TokenStream ts = analyzer.tokenStream(null, reader);
             CharTermAttribute termAttr = ts.addAttribute(CharTermAttribute.class);
@@ -300,6 +300,7 @@ public class SynonymPhraseStopWordAnalyzerTest {
             String secondToken = "";
             String thirdToken = "";
             String fourthToken = "";
+            String fifthToken = "";
             while (ts.incrementToken()) {
                 String theTerm = termAttr.toString();
                 if (noOfTokens == 0) {
@@ -309,6 +310,7 @@ public class SynonymPhraseStopWordAnalyzerTest {
                 if (noOfTokens == 1) {
                     secondToken = theTerm;
                 }
+                
                 if (noOfTokens == 2) {
                     thirdToken = theTerm;
                 }
@@ -316,6 +318,11 @@ public class SynonymPhraseStopWordAnalyzerTest {
                 if (noOfTokens == 3) {
                     fourthToken = theTerm;
                 }
+                
+                if (noOfTokens == 4) {
+                    fifthToken = theTerm;
+                }
+                
                 System.out.println(theTerm);
                 ++noOfTokens;
             }
@@ -324,7 +331,8 @@ public class SynonymPhraseStopWordAnalyzerTest {
             assert (secondToken.equalsIgnoreCase("google"));
             assert (thirdToken.equalsIgnoreCase("action:"));
             assert (fourthToken.equalsIgnoreCase("n.a.t.o."));
-            assert (noOfTokens == 4);
+            assert (fifthToken.equalsIgnoreCase("5"));
+            assert (noOfTokens == 5);
         } catch (IOException ex) {
             Logger.getLogger(SynonymPhraseStopWordAnalyzerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
