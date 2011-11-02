@@ -8,6 +8,8 @@ import org.apache.lucene.analysis.*;
 import com.alag.ci.textanalysis.*;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 
@@ -65,6 +67,10 @@ public final class SynonymPhraseStopWordFilter extends TokenFilter {
                 }
             }
         }
+        
+        if(tokenAdded){
+            return true;
+        }
 
         return termsRemain();
     }
@@ -111,26 +117,31 @@ public final class SynonymPhraseStopWordFilter extends TokenFilter {
         // not a valid phrase return first in queue
         String testPhrase = getTestPhrase("");
         if (phrasesCache.isStartOfPhrase(testPhrase)) {
-            assert (false);
-        } else {
-            if (phraseStartQueue.isEmpty()) {
-                if (hasNext) {
-                    assert (false);
-                }
-                return "";
-            } else {
-                return phraseStartQueue.poll();
+            assert (!hasNext);
+        } 
+        
+        if (phraseStartQueue.isEmpty()) {
+            if (hasNext) {
+                assert (false);
             }
+            return "";
+        } else {
+            return phraseStartQueue.poll();
         }
 
-        assert (false);
-        return "";
+//        assert (false);
+//        return "";
     }
 
     private String getStemmedText(String text) throws IOException {
-        if(text.equalsIgnoreCase(",")){
+        // first of all remove all that does not contain alphanumeric
+        boolean hasAlphanumeric = containsAlphaNumeric(text);
+      
+        if(!hasAlphanumeric){
             return "";
         }
+        
+        // now stem and remove stop words
         StringBuilder sb = new StringBuilder();
         Reader reader = new StringReader(text);
         TokenStream tokenStream = this.stemmer.tokenStream(null, reader);
@@ -166,21 +177,50 @@ public final class SynonymPhraseStopWordFilter extends TokenFilter {
 
         return testPhrase.toString().trim();
     }
-    
+
+    // todo - may have issues with tokens starting with "
+    //        should these be un-trimmed
+    //      - numbered bullet points may also be a problem
+    //        they should be filtered completely (as stop words)
+    //        but don't want to remove all numbers
     private static String trimPunctuation(String theTerm){
         String retVal = theTerm;
         boolean endsWithPunctuation = (theTerm.endsWith("?") || 
                 theTerm.endsWith(",") ||
                 theTerm.endsWith("\"") ||
-                theTerm.endsWith(";") ||                
-                theTerm.endsWith(".") ||
+                theTerm.endsWith(";") ||                  
+                theTerm.endsWith(".") ||                
                 theTerm.endsWith(":"));
         
+        boolean isAcronym = theTerm.contains(".") && theTerm.indexOf(".") != (theTerm.length() -1);
+        
         if( endsWithPunctuation && 
+                !isAcronym &&
                 theTerm.length() > 1){
             retVal = theTerm.substring(0, theTerm.length() - 1);     
         }
         
+        boolean startsWithPunctuation = retVal.startsWith("\"");     
+        
+        if( startsWithPunctuation && 
+                retVal.length() > 1){
+            retVal = retVal.substring(1);     
+        }
+        
         return retVal;
+    }
+    
+    // this should be doable with s.matches("\\w")
+    // but it is not working so check explicitly
+    private boolean containsAlphaNumeric (String s)
+    {
+        for (int i = 0; i < s.length(); i++)
+        {
+            if (Character.isLetterOrDigit(s.charAt(i))){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
