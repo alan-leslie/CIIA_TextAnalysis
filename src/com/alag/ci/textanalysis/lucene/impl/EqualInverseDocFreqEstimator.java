@@ -18,6 +18,18 @@ public class EqualInverseDocFreqEstimator implements InverseDocFreqEstimator {
 
     @Override
     public int noOfTags() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return tags.size();
+    }
+
+    @Override
+    public void outputFrequencies() {
+        for(Tag theTag: tags){
+            System.out.println(theTag.getDisplayText() + ", 1");           
+        }
+    }
+
+    @Override
+    public void prune(int lowest, int hightest) {
+        // all equal so cannot prune
     }
 }
